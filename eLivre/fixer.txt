@@ -1,0 +1,343 @@
+Django {
+
+    0. Certificar-se de que possui o Python instalado em seu sistema. Pode rodar um: {
+        python --version
+    ou
+        python3 --version
+    } 
+
+    1. Startar criando seu env (ambiente virtual) para poder separar as dependênciase evitar fazer bagunça na sua máquina. Se não tiver instalado o env, instale assim: {
+        pip install env
+    }
+
+    em seguida crie seu ambiente e nomeie da maneira como desejar, geralmente nomeamos de env ou venv. .
+
+    para criar o env: {
+        python3 -m venv venv - for Linux and Mac
+        python -m venv venv - for Windows
+    }
+
+    para ativar o env: {
+        source venv/binactivate - for Linux and Mac
+        venv\Scripts\Activate - for Windows
+    }
+
+    Se seu powershell do Windows bugar, ative com o comando abaixo e tente ativar novamente o env: {
+        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+    }
+
+    2. Instalar as dependências em seu env. Para um projeto básico não vamos precisar de muita coisa então só o Django a princípio mesmo, assim: {
+        pip install django
+    }
+
+    Com as dependencias adquiridas, podemos settar as mesmas como requirements assim: {
+        pip freeze > requirements.txt
+
+        Isso deve criar um arquivo chamado requirements.txt no diretório atual, contendo todas as dependências suas versões.
+
+        Para instalar em outra máquina ou em outro ambiente, você pode rodar e instalar todas a dependências listadas no requirements.txt usando:
+
+        pip install -r requirements.txt
+
+    }
+
+    3. Agora, podemos criar o projeto, desta forma:{
+        django-admin startproject nome_do_projeto
+    }
+
+    * GERALMENTE NESTA PARTE, COLOCO O NOME DO PROJETO COMO "core" 
+
+    Após o projeto criado, ele deve gerar uma estrutura de pastas mais assim: {
+
+        Geralmente, o Django cria uma pasta 'core' com outra 'core' dentro com estes arquivos dentro desta segunda pasta 'core', assim:
+        
+        core/
+        │
+        ├── manage.py
+        ├── core/
+        │   ├── __init__.py
+        │   ├── settings.py
+        │   ├── urls.py
+        │   ├── wsgi.py
+        │   ├── asgi.py
+
+        core = guarda o manage.py e outra core
+
+        manage.py = ele é o arquivo responsável por rodar os comandos(CLI do Django[command line interface]) quando o chamamos, por exemplo: manage.py runserver
+
+        settings.py = arquivo das configurações do projeto Django
+
+        urls.py = arquivopara roteamento de URLs para o projeto - estas URLs buscam as URLs dos INSTALLED_APPS
+
+        Então já se lembra que cada projeto que você criar, será preciso intalá-lo nos INSTALLED_APPS que ficam lá no settings.py
+
+        wsgi.py = Web Server Gateway Interface, arquivo usado para implementar a aplicação em servidores web. Não vamos mexer com isto por enquanto. Apenas em deploy.
+
+        asgi.py = Asynchronous Server Gateway Interface arquivo usado para implementar a aplicação em servidores web assíncronos. Também ainda não vamos mexer com isto. Apenas em deploy.
+
+
+    }
+
+    4. Entre na pasta do projeto: {
+        cd nome_do_projeto
+    }
+
+    5. Crie seu app, os dois comandos devem funcionar, escolha 1: {
+        python manage.py startapp nome_do_app
+        py manage.py startapp nome_do_app
+    }
+
+    ps: vou usar o nome do app como loja para fins didáticos. .
+
+    Após o app criado, outra estrutura de pastas será criada, assim: {
+
+        loja/
+        │
+        ├── __init__.py
+        ├── admin.py
+        ├── apps.py
+        ├── migrations/
+        │   └── __init__.py
+        ├── models.py
+        ├── tests.py
+        ├── views.py
+
+        dentro do seu app loja, temos:
+
+        init.py = indica que o diretório é um pacote Python, o que é útil para a gestão do projeto - se dúvidas, busque mais sobre na documentação oficial do Django aqui: https://docs.djangoproject.com/en/5.1/
+
+        ou na versão em que o Django estiver quando estiver usando. .
+
+        admin.py: aqui teremos as configurações para o painel administrativo nativo do Django
+
+        migrations = diretório que contém arquivos de migração do banco de dados e o init dentro dele para dizer que o diretório é um pacote Python
+
+        models.py: Definições dos modelos de dados do app - aqui montamos os modelos do banco de dados, as tabelas. Mas, montamos usando classes do Python
+
+        tests.py = Testes automatizados para o app
+
+        views.py = aqui temos a lógica de negócio do app - ou a lógica de controller
+
+    }
+
+    6. Registre seu app nas settings do app principal: {
+        Na lista INSTALLED_APPS = [], instale seu app ao final da lista, por exemplo:
+
+        INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'nome_do_app',
+    ]
+
+    }
+    
+    Nas settings, se quiser alterar o LANGUAGE_CODE para pt-br, pode fazer. .
+    Ainda nas settings, se quiser alterar o TIME_ZONE para America/Sao_Paulo. .
+
+    Seria assim então: {
+        LANGUAGE_CODE = 'en-us'
+        TIME_ZONE = 'UTC'
+
+        para
+
+        LANGUAGE_CODE = 'pt-br'
+        TIME_ZONE = 'America/Sao_Paulo'
+    }
+
+    
+        MAS, ANTES DE AVANÇAR, PRECISAMOS SABER O QUE É MVT, o modelo usado pelo Framework Django
+
+        MVT significa = Models, Views, Templates
+
+        Models = Se trata de onde criamos nossos models ou modelos em português, para o banco de dados. Aqui criamos as tabelas do banco de dados e relacionamentos através de classes do Python;
+
+        Views = Camada da lógica de negócios do Django. Aqui vamos criar os controles da aplicação.
+
+        Templates = Nos templates vamos criar nosso visual. Geralmente nosso HTML no padrão Django
+
+    Agora sim então podemos avançar para o passo 7. .
+
+    
+
+    7. Com seu app instalado, podemos começar a definir URLs, desta forma: {
+        
+        ps: A partir de agora irei chamar o projeto de core e o app de loja por fins didáticos. .
+
+        Primeiramente, acesse o arquivo urls.py na pasta do seu projeto, ou seja, a pasta core. 
+
+        ps: {
+            projeto = core
+            app = loja
+        }
+        
+        Neste arquivo, além dos comentários com 'tips', encontraremos algo assim: {
+
+        from django.contrib import admin
+        from django.urls import path
+
+        urlpatterns = [ 
+            path('admin/', admin.site.urls), 
+        ]
+    }
+
+        Com isto feito, a primeira coisa que queremos fazer é adicionar nossa primeira url para que Django possa acessá-la. O path de admin já vem, pois o Django já cria esta url quando iniciamos nosso projeto. Vamos supor que estamos criando nossa loja e então teremos várias urls para essa loja. Para isso precisamos listar essa url aqui nas urls do projeto(core). Assim: {
+            
+            from django.contrib import admin
+            from django.urls import path, include
+
+            urlpatterns = [
+                path('admin/', admin.site.urls),
+                path('loja/', include('loja.urls'))
+            ]
+
+            O que foi feito? Importamos a 'função include' e adicionamos mais um path (caminho), ou seja, o caminho para as urls da nossa loja dentro do app. Você tá entendendo o que tá acontecendo aqui? Estamos incluindo as urls da app loja.
+
+            tipo: caminho('loja', include('loja.urls')) - ele tá acessando loja e procurando as urls dessa loja
+
+            Você cadastra a url nas urls do core e isso faz que o as urls do core busquem as urls dentro das urls do seu app. .
+
+            core urls > app(loja) urls
+
+            certinho?
+
+        mas, aqui vamos ter um erro ao tentar rodar o servidor com py.manage.py runserver ou python manage.py runserver - por que temos este erro?
+        porque estamos tentando rodar e buscar as urls do app loja mas, você já percebeu que não existe este arquivo dentro do app loja?
+
+        temos que criar manualmente, rs - portanto o passo 8 será criar e editar este arquivo. .
+    }
+
+    8. Criar e editar urls.py dentro do app loja: {
+
+        Começe criando este arquivo dentro do app loja. Após criado, vamos importar o path e as views e criar o urlpatterns, assim: {
+
+            from django.urls import path
+            from . import views
+
+                urlpatterns = [
+                    path('', views.home, name='home')
+                ]
+
+            Importamos o path para podermos usar o path e importamos as views da pasta do nosso app loja para podermos usar, pois passamos views.home dentro path e agora iremos criar esta função home que vai nos permitir trabalhar com o MVT
+            
+            Além disto, definimos um nome para home com o sinal de = dando a home o nome de home mesmo. .
+
+            Se tivermos mais urls, podemos inserir nos patterns de urls da mesma forma com que fizemos com a home_page que chamamos apenas de home ali. .
+
+            Resumindo: quando um cliente entra em nosso site a requisição vai pro roteamenteo de urls, então ele cai dentro de urls.py e vai perguntar, a url do app loja existe? oqq ela faz? redireciona para loja.urls [no include] então busca dentro das urls da loja e encontra uma url vazia que chama uma função do Python que está nas views, que é a função home. Essa função existe? Ainda não neste caso, então no passo 9 iremos criar esta função. .
+        }   
+    }
+
+    9. Criando a função home dentro das views do app loja: {
+        
+        from django.shortcuts impor render
+        from django.http import HttpResponse
+
+        def home(request):
+            return render(request, 'loja/home.html')
+
+    }
+
+    Geralmente aqui o pessoal primeiro retorna uma resposta Http: {
+        
+        from django.shortcuts impor render
+        from django.http import HttpResponse
+
+         def home(request):
+            return HttpResponse('Hello World')
+    }
+
+    Reacap - buscou em urls do core, as urls do core redirecionaram para as urls do app que buscou primeiro uma url vazia que direcionava para uma função das views que retornou uma resposta Http ou renderizou a página. Este é o fluxo inicial de uma aplicação Django. .
+
+   10. Retornando Templates 1 {
+
+    Vá nas settings do core e na parte onde se lê DIRS, adicione.
+
+    'DIRS': [BASE_DIR / 'templates']
+
+    BASE_DIR é uma constante criada pelo Django que referencia a raiz do projeto, independente da onde o projeto esteja, BASE_DIR sempre será a raiz dele. .
+
+    Dentro da raiz do projeto terá uma pasta templates que vai conter arquivos de templates. .
+
+    E na 'APP_DIRS como True afirma que na raiz do de cada app podemos ter uma pasta de templates onde o Django irá procurar por estes arquivos. .
+
+    Ainda falando sobre templates: na parte de STATIC_URL, iremos configurar assim: 
+
+    import os
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
+    STATIC_ROOT = os.path.join('static')
+
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+
+    Está é uma configuração para arquivos estáticos e de mídia. Ou seja, as imagens, vídeos, CSS, JavaScript, etc.
+
+    Arquivos de mídia são os arquivos que os users fazem upload para o sistema, como os vids do YouTube, por exemplo. .
+
+    STATIC_URL = '/static/' = onde o Django vai disponibilizar os arquivos estáticos. .
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),) = em qual pasta o Django vai procurar pelos arquivos estáticos que no caso é na raiz do projeto(BASE_DIR), dentro da pasta templates e dentro da pasta static. .
+    STATIC_ROOT = os.path.join('static') = necessário na hora do deploy, iremos ignorar por enquanto. .
+
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media') = pasta onde o Django vai salvar todos os arquivos que foram uploadados. .
+    MEDIA_URL = '/media/' = em qual url o Django vai disponibilizar aquele arquivo. .
+
+   }
+
+    11. Retornando Templates 2 {
+
+        Sabendo de tudo isto, iremos criar uma pasta chamada templates dentro do nosso app loja, aqui o Django irá buscar os templates. .
+
+        Dentro desta pasta podemos criar um arquivo chamado home.html, por exemplo ou index.html. .
+
+        Aí você pode editar seu HTML tranquilo mas, se ainda não tiver mudado de HttpResponse la nas views, terá que alterar e agora gerar uma render(renderização do template) ao invés de retornar apenas uma reposta Http. . Deste jeito abaixo: {
+
+            def home(request):
+                return render(request, 'loja/home.html')
+
+            Essa função recebe uma requisição como primeiro parâmetro e um caminho como o segundo parâmetro. Adivinha qual caminho? O do seu arquivo html que está dentro do seu app loja. 
+
+            obs: o caminho deve ser passado como uma string dentro de aspas(pode usar aspas simples mesmo)
+        }
+    }
+
+    12. Reaproveitando Headers e Footers(usando os extends e block com as tags do Django): {
+
+        Para isso precisaremos criar uma pasta templates na raiz do projeto core também, kkk. . Parece complicado mas, é como diz o nome para gambiarras complicadas? Engenhoso, kkkk. .
+
+        Ou seja, vai ficar algo mais ou menos assim em seus diretórios:
+
+        Learning Django/
+        │
+        └── core/
+            │
+            ├── core/
+            │
+            ├── loja/
+            │
+            ├── venv/
+            │
+            ├── db.sqlite3
+            │
+            ├── manage.py
+            │
+            └── templates/
+
+        Dentro desta pasta templates vamos criar nosso arquivo base que vai se chamar base.html, dele vamos herdar coisas que desejamos herdar como molde para outros html. .
+
+        Agora dentro do home, por exemplo, podemos extender o Header e Footer do template base usando as tags extends do Django. .
+
+        {%  %} = chaves com dois %% dentro das chaves. .
+
+*******
+        parei no min 38:09 do vid
+        explicar como fiz o extends de base para home
+        explicar como defini o block e endblock no base e apliquei no home
+
+*******
+
+    }
+}
