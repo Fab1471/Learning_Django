@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block prebody %}
+    <p>Nav</p>
+{% endblock %}
+
 
 {% block body %}
-
     <p>Confira!</p>
-
+    <img src="{% static 'logo.jpeg' %}" alt="logo">
 {% endblock %}

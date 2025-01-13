@@ -328,16 +328,78 @@ Django {
 
         Dentro desta pasta templates vamos criar nosso arquivo base que vai se chamar base.html, dele vamos herdar coisas que desejamos herdar como molde para outros html. .
 
-        Agora dentro do home, por exemplo, podemos extender o Header e Footer do template base usando as tags extends do Django. .
+        Dentro desta pasta também já podemos criar uma pasta chamada static, onde ficarão nossos arquivos estáticos.
+
+        Agora dentro do home.html, por exemplo, podemos estender o Header e Footer do template base usando as tags extends do Django. .
 
         {%  %} = chaves com dois %% dentro das chaves. .
 
-*******
-        parei no min 38:09 do vid
-        explicar como fiz o extends de base para home
-        explicar como defini o block e endblock no base e apliquei no home
+        Para extender do seu arquivo base.html para home.html só precisamos fazer algo assim: 
 
-*******
+        {% extends 'base.html' %}
+
+        Então, se tiver um Header e um Footer definido em base.html ele será replicado para todas as páginas que forem aplicadas o extends deste base.html.
+
+        ps: não foi preciso referenciar a pasta templates porque definimos isto antes nas settings do projeto.
+
+        Porém, ainda há as tags de block e endblock que vão funcionar bloqueando o conteúdo em alguma parte do html, por exemplo:
+
+        Vamos pegar este html de exemplo do base: 
+
+        <!DOCTYPE html>
+        <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>eLivre</title>
+        </head>
+        <body>
+            <h1>Bem vindo ao eLivre</h1>
+            
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'lancamentos' %}">Lançamentos</a></li>
+                    <li><a href="{% url 'masculino' %}">Masculino</a></li>
+                    <li><a href="{%  url 'feminino' %}">Feminino</a></li>
+                </ul>
+            </nav>
+            
+            {% block body %}{% endblock %}
+        </body>
+        </html>
+
+        PERCEBEMOS ACIMA O USO DESTAS TAGS criando o início do bloqueio e o final dele. . Quando essa tag por adicionada no arquivo estendido, ela será bloqueada dentro destes limites, vamos observar o home.html que se estende de base.html:
+
+        {% extends 'base.html' %}
+
+        {% block body %}
+
+            <p>Confira!</p>
+
+        {% endblock %}
+
+        O CONTEÚDO DO (<p>Confira!</p>) fica abaixo do extends e bloqueado pela tag para que neste caso não seja sobreposto.
+
+        É como se com a tag agora fosse possível redelimitar o início de tags HTML. . Definir o início de um header, body, footer, etc. .
 
     }
+
+    13. Trabalhando com as Tags do Django para o uso de links Django. .
+
+    Aqui, para passar a imagem se sua config de static deu certo poderíamos inserir na scr da imagem, normalmente: /static/imagem.png - porém o Django tem uma maneira mais otimizada de fazer isto usando suas tags.
+
+    Vamos usar a tag load para carregar os arquivos estáticos no html que desejamos usar algum arquivo estático, assim: {% load static %}
+
+    E então adicionamos o arquivo entro das tags, assim: {
+        
+        {% block body %}
+        <p>Confira!</p>
+        <img src="{% static 'logo.jpeg' %}" alt="logo">
+        {% endblock %}
+    }
+
+    Neste exemplo adicionamos uma imagem usando a tag load no início para carregamento e depois referenciando em static e o nome do arquivo de imagem.
+
+    14. 
 }
